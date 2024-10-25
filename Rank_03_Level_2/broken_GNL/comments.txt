@@ -1,0 +1,9 @@
+Students have passed this level by simply disregarding most of the code below replacing it with their own GNL implementation. 
+
+Inbar:
+
+“I ignored their broken code and made a new one, a simple one that u can find an example of here:
+https://github.com/pasqualerossi/42-School-Exam-Rank-03/blob/main/get_next_line/get_next_line.c
+
+I did use their *.h file, but i corrected the lines: #ifndef and #define GNL
+To #ifndef and #define <proper name of the *.h file>”

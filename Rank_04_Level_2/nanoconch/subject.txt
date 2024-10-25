@@ -1,0 +1,11 @@
+Write a function that takes three inputs.
+
+First one: Name of executable like ‘ls’ or ‘cat
+
+Second one: Pointer to arguments that the function ‘execve’ needs
+
+Third one: ‘r’ for read or ‘w’ for write (redirection)
+
+Return a file descriptor that is connected to the input / output of executable (depending if ‘r’ or ‘w’)
+
+Fcts allowd: execve(), pipe(), fork(), close(), exit()
