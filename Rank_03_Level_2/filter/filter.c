@@ -18,22 +18,24 @@
 
 #define BUF_SIZE 4096
 
-void *cus_memmem(const void *haystack, size_t haystack_len, const void *needle, size_t needle_len) {
-    if (needle_len == 0) {
+void *cus_memmem(const void *haystack, size_t haystack_len, const void *needle, size_t needle_len)
+{
+    if (needle_len == 0)
         return (void *)haystack;
-    }
-    if (haystack_len < needle_len) {
+	
+    if (haystack_len < needle_len)
         return NULL;
-    }
 
     const unsigned char *h = haystack;
     const unsigned char *n = needle;
     size_t limit = haystack_len - needle_len + 1;
 
-    for (size_t i = 0; i < limit; ++i) {
-        if (h[i] == n[0] && !memcmp(h + i, n, needle_len)) {
+    size_t	i = 0;
+    while (i < limit)
+    {
+        if (h[i] == n[0] && !memcmp(h + i, n, needle_len))
             return (void *)(h + i);
-        }
+	++i;
     }
     return NULL;
 }
