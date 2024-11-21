@@ -1,0 +1,38 @@
+Probably something not as detailed as this but from what I have gatrhered frim people
+Question: Calculator with Parentheses Parsing
+Objective:
+Write a program in C that evaluates arithmetic expressions with:
+
+Numbers (single-digit only, e.g., 2, 3).
+Operators + and *.
+Parentheses ( ).
+Requirements:
+Input: A single arithmetic expression as a string (e.g., "2*(3+4)").
+Output: Print the result of the evaluated expression (e.g., 14 for "2*(3+4)").
+Handle:
+Operator precedence (* has higher precedence than +).
+Parentheses for overriding precedence.
+Constraints:
+Only single-digit numbers are allowed (e.g., 1, 2, not 12).
+Input is guaranteed to be well-formed (no malformed expressions like 2++3).
+Example Walkthrough:
+Input: 2*(3+4)
+Abstract Syntax Tree (AST):
+markdown
+Copy code
+      *
+    /   \
+   2     +
+        /   \
+       3     4
+Evaluation:
+3 + 4 = 7
+2 * 7 = 14
+Output: 14
+Key Tasks:
+Parse the input string into an Abstract Syntax Tree (AST):
+Numbers are leaf nodes.
+Operators (+, *) are internal nodes.
+Evaluate the AST recursively:
+For +, add the results of left and right subtrees.
+For *, multiply the results of left and right subtrees.

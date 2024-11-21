@@ -1,0 +1,15 @@
+
+Here’s the corresponding version of the question using execvp:
+
+Question: Function with execvp
+Write a function that takes three inputs.
+
+First one: Name of executable like ls or cat.
+
+Second one: Pointer to arguments that the function execvp needs.
+
+Third one: 'r' for read or 'w' for write (redirection).
+
+Return a file descriptor that is connected to the input/output of the executable (depending on if 'r' or 'w').
+
+Functions allowed: execvp(), pipe(), fork(), close(), exit().

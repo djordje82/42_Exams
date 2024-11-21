@@ -1,0 +1,59 @@
+
+Somehting lijke this but unsurte hahah
+
+Subject: Manual JSON Parsing
+Objective:
+Write a program in C to parse a JSON string manually without using any external libraries (e.g., cJSON, jansson). The program must process the JSON string character-by-character to extract and print specific values.
+
+JSON Example:
+json
+Copy code
+{
+    "name": "Alice",
+    "age": 25,
+    "skills": ["C", "Python", "JSON"],
+    "details": {
+        "city": "Berlin",
+        "country": "Germany"
+    }
+}
+Requirements:
+Parse the JSON string manually.
+Extract and print:
+"name": String value.
+"age": Integer value.
+All elements of the "skills" array.
+"city" and "country" from the "details" object.
+Constraints:
+No external libraries like cJSON or jansson are allowed.
+Use only C Standard Library headers (<stdio.h>, <stdlib.h>, <string.h>, etc.).
+Assume the input JSON string is always valid (no malformed input).
+Expected Output:
+For the example JSON above:
+
+makefile
+Copy code
+Name: Alice
+Age: 25
+Skills: C, Python, JSON
+City: Berlin
+Country: Germany
+Key Areas to Study:
+JSON Structure:
+
+Objects: Key-value pairs enclosed in {}.
+Arrays: Comma-separated values enclosed in [].
+Data types: Strings, numbers, arrays, and nested objects.
+Manual Parsing:
+
+Character-by-character traversal of the JSON string.
+Identify and process tokens ({, }, [, ], :, ,).
+Extract substrings for keys and values.
+Memory Management:
+
+Use static buffers or dynamically allocate memory for extracted values.
+Avoid memory leaks when dealing with dynamically allocated data.
+Error Handling:
+
+Skip invalid or unexpected characters.
+Handle missing closing braces or brackets gracefully.
