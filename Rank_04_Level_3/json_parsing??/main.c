@@ -3,11 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 
-// Function prototypes
-void parse_object(const char **json);
-void parse_array(const char **json);
-void parse_key_value(const char **json);
-
 // Helper function: Skip spaces
 void skip_spaces(const char **json) {
     while (isspace(**json)) (*json)++;
@@ -38,36 +33,6 @@ int parse_number(const char **json) {
     return num;
 }
 
-// Function: Parse a JSON object
-void parse_object(const char **json) {
-    skip_spaces(json);
-    if (**json == '{') {
-        (*json)++; // Skip the opening brace
-        while (**json && **json != '}') {
-            parse_key_value(json);
-            skip_spaces(json);
-            if (**json == ',') (*json)++; // Skip the comma
-        }
-        if (**json == '}') (*json)++; // Skip the closing brace
-    }
-}
-
-// Function: Parse a JSON array
-void parse_array(const char **json) {
-    skip_spaces(json);
-    if (**json == '[') {
-        (*json)++; // Skip the opening bracket
-        while (**json && **json != ']') {
-            char value[100];
-            parse_string(json, value);
-            printf("Skill: %s\n", value);
-            skip_spaces(json);
-            if (**json == ',') (*json)++; // Skip the comma
-        }
-        if (**json == ']') (*json)++; // Skip the closing bracket
-    }
-}
-
 // Function: Parse key-value pairs
 void parse_key_value(const char **json) {
     char key[100];
@@ -92,6 +57,36 @@ void parse_key_value(const char **json) {
             printf("%s:\n", key);
             parse_array(json);
         }
+    }
+}
+
+// Function: Parse a JSON array
+void parse_array(const char **json) {
+    skip_spaces(json);
+    if (**json == '[') {
+        (*json)++; // Skip the opening bracket
+        while (**json && **json != ']') {
+            char value[100];
+            parse_string(json, value);
+            printf("Skill: %s\n", value);
+            skip_spaces(json);
+            if (**json == ',') (*json)++; // Skip the comma
+        }
+        if (**json == ']') (*json)++; // Skip the closing bracket
+    }
+}
+
+// Function: Parse a JSON object
+void parse_object(const char **json) {
+    skip_spaces(json);
+    if (**json == '{') {
+        (*json)++; // Skip the opening brace
+        while (**json && **json != '}') {
+            parse_key_value(json);
+            skip_spaces(json);
+            if (**json == ',') (*json)++; // Skip the comma
+        }
+        if (**json == '}') (*json)++; // Skip the closing brace
     }
 }
 
