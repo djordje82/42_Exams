@@ -1,0 +1,24 @@
+allowed functions: malloc, calloc, realloc, free, printf, isdigit, write
+
+program needs to print the result of a math expression.
+handles * and + and parenthesis.
+does not handle whitespace.
+values are between 0 and 9.
+if unexpected symbol OR unexpected '(' ')' -> print error and exit(1)
+if symbol is at the end of input print error
+if syscall failure exit(1)
+
+./vbc '1'
+1
+./vbc '3*4+5'
+17
+./vbc '(3+4)*5'
+35
+./vbc '(((((((1)))))))'
+1
+./vbc '(((((2+2)*2+2)*2+2)*2+2)*2+2)*2'
+188
+./vbc '1+2+3+4+5'
+15
+./vbc '((1+3)*12+(3*(2+6)))'
+unexpected token '2'
