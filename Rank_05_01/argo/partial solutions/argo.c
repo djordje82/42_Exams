@@ -1,6 +1,9 @@
 
 #include "argo.h"
 
+int	g_error = 0;
+int g_error_no_key = 0;
+
 int	peek(FILE *stream)
 {
 	int	c;
@@ -10,25 +13,9 @@ int	peek(FILE *stream)
 	return (c);
 }
 
-// void unexpected(FILE *stream) {
-// 	if (peek(stream) != EOF)
-// 		printf("Unexpected token '%c'\n", peek(stream));
-// 	else
-// 		printf("Unexpected end of input\n");
-// }
-
 void unexpected(FILE *stream) {
 	if (peek(stream) != EOF)
-	{
-		char	c = peek(stream);
-		if (c == '\n')
-		{
-			printf("Unexpected token '\\");
-			printf("n'\n");
-		}
-		else
-			printf("Unexpected token '%c'\n", peek(stream));
-	}
+		printf("Unexpected token '%c'\n", peek(stream));
 	else
 		printf("Unexpected end of input\n");
 }
@@ -49,29 +36,13 @@ int	expect(FILE *stream, char c)
 	{
 		return (1);
 	}
-	unexpected(stream);
+	if ((!g_error_no_key))
+		unexpected(stream);
 	return (0);
 }
 
 // add your code here
 
-//not sure if this is required but I updated the unexpected and will test if 
-//I get argo again.
-void unexpected(FILE *stream) {
-	if (peek(stream) != EOF)
-	{
-		char	c = peek(stream);
-		if (c == '\n')
-		{
-			printf("Unexpected token '\\");
-			printf("n'\n");
-		}
-		else
-			printf("Unexpected token '%c'\n", peek(stream));
-	}
-	else
-		printf("Unexpected end of input\n");
-}
 
 bool	parse_json(json *dst, FILE *stream);
 
@@ -86,13 +57,20 @@ bool	parse_integer(json *dst, FILE *stream)
 		if (peek(stream) == EOF)
 		{
 			ungetc('-', stream);
+			g_error = 1;
 			return (false);
 		}
 	}
 	if (!isdigit(peek(stream)))
+	{
+		g_error = 1;
 		return (false);
+	}
 	if (fscanf(stream, "%d", &result) != 1)
+	{
+		g_error = 1;
 		return (false);
+	}
 	result *= sign;
 	dst->type = INTEGER;
 	dst->integer = result;
@@ -111,11 +89,13 @@ char	*get_str(FILE *stream)
 		accept(stream, '\\');
 		buffer[i++] = getc(stream);
 	}
-	if (peek(stream) == EOF || !expect(stream, '"'))
+	if (!accept(stream, '"'))
 	{
 		free(buffer);
+		g_error = 1;
 		return (NULL);
 	}
+
 	buffer[i] = '\0';
 	return (buffer);
 }
@@ -125,7 +105,10 @@ bool	parse_string(json *dst, FILE *stream)
 	dst->type = STRING;
 	dst->string = get_str(stream);
 	if (!dst->string)
+	{
+		g_error = 1;
 		return (false);
+	}
 	return (true);
 }
 
@@ -141,7 +124,7 @@ bool	parse_map(json *dst, FILE *stream)
 	dst->type = MAP;
 	dst->map.data = malloc(256 * sizeof(pair));
 	if (!dst->map.data)
-		return (false);
+		return NULL;
 	dst->map.size = 0;
 	while (peek(stream) != '}' && peek(stream) != EOF)
 	{
@@ -151,14 +134,22 @@ bool	parse_map(json *dst, FILE *stream)
 		{
 			dst->map.data[i].key = get_str(stream);
 			if (!dst->map.data[i].key)
+			{
+				g_error_no_key = 1;
 				return (false);
+			}
 		}
 		else
+		{
+			g_error_no_key = 1;
 			return (false);
+		}
 		// the key is always followed by a colon and a value
-		if (!accept(stream, ':') || !parse_json(&dst->map.data[i].value,
-				stream))
+		if (!accept(stream, ':') || !parse_json(&dst->map.data[i].value, stream))
+		{
+			g_error = 1;
 			return (false);
+		}
 		if (accept(stream, ','))
 		{
 			i++;
@@ -166,7 +157,10 @@ bool	parse_map(json *dst, FILE *stream)
 		}
 	}
 	if (!accept(stream, '}'))
+	{
+		g_error = 1;
 		return (false);
+	}
 	return (true);
 }
 
@@ -180,15 +174,21 @@ bool	parse_json(json *dst, FILE *stream)
 		return (parse_map(dst, stream));
 	else
 		return (false);
-	return (true);
 }
 
 int	argo(json *dst, FILE *stream)
 {
-	if (!parse_json(dst, stream) || peek(stream) != EOF)
+	if (g_error_no_key)
+		return (-1);
+	if (g_error)
 	{
 		unexpected(stream);
 		return (-1);
+	}
+	if (!parse_json(dst, stream))
+	{
+		unexpected(stream);
+		return (-1);		
 	}
 	return (1);
 }
